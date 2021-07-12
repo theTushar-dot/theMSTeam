@@ -1,3 +1,4 @@
+const express = require('express')
 const app = require("express")();
 const server = require("http").createServer(app);
 const mongoose = require("mongoose");
@@ -158,6 +159,7 @@ io.on('connection', socket => {
 });
 
 if(process.env.NODE_ENV === 'production'){
+    console.log('it work')
     app.use(express.static('client/build'))
     // just checking
 }
