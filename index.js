@@ -158,7 +158,7 @@ io.on('connection', socket => {
 
 });
 
-if(process.env.NODE_ENV === 'production'){
+if((process.env.NODE_ENV || '').trim() !== 'production'){
     console.log('it work')
     app.use(express.static('client/build'))
     const path = require('path')
