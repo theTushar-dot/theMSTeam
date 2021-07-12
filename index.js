@@ -161,6 +161,10 @@ io.on('connection', socket => {
 if(process.env.NODE_ENV === 'production'){
     console.log('it work')
     app.use(express.static('client/build'))
+    const path = require('path')
+    app.get('*', (res, req) => {
+        res.sendFile(path.resolve(__dirname,'client', 'build', 'index.html'));
+    })
     // just checking
 }
 
