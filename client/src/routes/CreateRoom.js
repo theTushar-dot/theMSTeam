@@ -6,8 +6,8 @@ import {Button, TextField} from '@material-ui/core'
 import './CreateRoom.css'
 
 const CreateRoom = (props) => {
-    // const user_Name = props.match.params.name
-    // window.name = user_Name
+    const user_Name = props.match.params.name
+    window.name = user_Name
 
     const [room_id, setRoom_id] = useState('')
 
@@ -29,7 +29,7 @@ const CreateRoom = (props) => {
     return (
         <div class= "main_container">
             <div class='column'>
-            {/* <h1>{`hey, ${user_Name}`}</h1> */}
+            <h1>{`hey, ${user_Name}`}</h1>
                 <TextField type="text" value={room_id} onChange={onChangeinput}  className="form-control" placeholder="Enter Room Id" />
                 <Button variant="contained" color="secondary" onClick={join_room}> Join room</Button>
                 <Button variant="contained" color="secondary" onClick={create}>Create room </Button>

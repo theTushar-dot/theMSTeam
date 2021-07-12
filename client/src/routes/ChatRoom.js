@@ -23,9 +23,9 @@ const ChatRoom = (props) => {
 
     useEffect(() => {
         console.log('C1')
-        const enteredName = prompt('Please enter your name')
+        // const enteredName = prompt('Please enter your name')
 
-        // const enteredName = window.name
+        const enteredName = window.name
         // setNum(pre => pre = 1)
         setNames(enteredName)
         console.log('Its name', enteredName)
