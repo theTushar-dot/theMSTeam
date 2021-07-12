@@ -44,7 +44,7 @@ mongoose
 
 const socketToRoom = {};
 
-const PORT = 5000;
+const PORT = 3000;
 
 app.use('/users', userRoute)
 
