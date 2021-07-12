@@ -1,0 +1,34 @@
+{
+  "name": "my-ms-clone",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "cd client && npm run build",
+    "install-client": "cd client && npm install",
+    "heroku-postbuild": "npm run install-client && npm run build",
+    "start": "node index.js",
+    "client": "cd client && npm start",
+    "dev": "nodemon index.js"
+  },
+  "author": "Tushar Prakash",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "concurrently": "^6.2.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "is-empty": "^1.2.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.13.2",
+    "nodemon": "^2.0.7",
+    "passport": "^0.4.1",
+    "passport-jwt": "^4.0.0",
+    "serve": "^11.3.2",
+    "simple-peer": "^9.11.0",
+    "socket.io": "^4.1.2",
+    "uuid": "^8.3.2",
+    "validator": "^13.6.0"
+  }
+}

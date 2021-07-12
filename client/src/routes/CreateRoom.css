@@ -1,0 +1,16 @@
+.main_container{
+    display: flex;
+}
+
+/* .row {
+    display: flex;
+  } */
+  
+.column {
+    flex: 50%;
+}
+
+/* .button{
+    /*Change the width as much as you like, but make sure 
+
+/* }  */
