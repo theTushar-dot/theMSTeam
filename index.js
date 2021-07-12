@@ -47,6 +47,11 @@ const PORT = process.env.PORT || 5000;
 
 app.use('/users', userRoute)
 
+app.get('/test', (req, res) => {
+    app.use(express.static('client/build'))
+
+}
+
 
 app.get('/', (req, res) => {
     // res.send(users)
