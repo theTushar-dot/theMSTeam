@@ -26,20 +26,20 @@ const io = require("socket.io")(server, {
 
 app.use(cors())
 
-// const MongoClient = require('mongodb').MongoClient;
-// const db = 'mongodb+srv://mytushar:Tushar@1290@cluster0.vi6xw.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
-// const client = new MongoClient(db, { useNewUrlParser: true });
+const MongoClient = require('mongodb').MongoClient;
+const db = 'mongodb+srv://mytushar:Tushar@1290@cluster0.vi6xw.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
+const client = new MongoClient(db, { useNewUrlParser: true });
 const users = {};
 var uuser;
 // var roomid;
-// mongoose
-//   .connect(
-//     db,
-//     { useUnifiedTopology: true,
-//       useNewUrlParser: true }
-//   )
-//   .then(() => console.log("MongoDB successfully connected"))
-//   .catch(err => console.log(err));
+mongoose
+  .connect(
+    db,
+    { useUnifiedTopology: true,
+      useNewUrlParser: true }
+  )
+  .then(() => console.log("MongoDB successfully connected"))
+  .catch(err => console.log(err));
 
 const socketToRoom = {};
 
