@@ -55,15 +55,15 @@ app.use('/users', userRoute)
 
 
 
-app.get('/', (req, res) => {
-    // res.send(users)
-    res.send(users)
-})
+// app.get('/', (req, res) => {
+//     // res.send(users)
+//     res.send(users)
+// })
 
-app.get('/on', (req, res) => {
-    // res.send(users)
-    res.send(socketToRoom)
-})
+// app.get('/on', (req, res) => {
+//     // res.send(users)
+//     res.send(socketToRoom)
+// })
 
 // app.get('/', (req, res) => {
 //     res.redirect(`/${uuidV4()}`)
