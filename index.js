@@ -52,7 +52,7 @@ app.use('/users', userRoute)
 
 // }
 
-app.use(express.static('client/build'))
+
 
 
 app.get('/', (req, res) => {
@@ -164,6 +164,13 @@ io.on('connection', socket => {
     });
 
 });
+
+app.use(express.static('client/build'))
+const path = require('path')
+app.get('*', (res, req) => {
+    res.sendFile(path.resolve(__dirname,'client', 'build', 'index.html'));
+})
+
 
 if((process.env.NODE_ENV || '').trim() !== 'production'){
     console.log('it work')
