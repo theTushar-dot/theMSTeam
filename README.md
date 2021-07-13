@@ -1,4 +1,4 @@
-# theTeam
+# theTeams
 ## About the Application
 > It's a video conferencing application developed in react js(front end) and node js(backend). 
 > This project was developed under the ***Microsoft Engage'21 Mentorship programme***.
