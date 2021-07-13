@@ -1,13 +1,22 @@
 import React,  { useEffect, useRef, useState } from 'react'
-import { Grid, Typography, Paper } from '@material-ui/core'
+import Icon from '@material-ui/core/Icon'
+import { styled } from '@material-ui/styles';
+import { Grid, Typography, Paper, Button } from '@material-ui/core'
 import Input from '@material-ui/core/Input'
 import SendIcon from '@material-ui/icons/Send';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+// import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import CallEndIcon from '@material-ui/icons/CallEnd';
+import { PhoneDisabled} from '@material-ui/icons'
+import PersonAddIcon from '@material-ui/icons/PersonAdd';
+import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
+import Todo from '../components/ToDo'
+import ListAltIcon from '@material-ui/icons/ListAlt';
 
-import styled from "styled-components";
+// import styled from "styled-components";
 import'../routes/styles.css'
 
-const RoomFront = ({video_en, changemode, peersRef, num ,name ,Container, StyledVideo, userVideo, Video,  peers, muteUnmute, playStop, leaveMeet, sendmess}) => {
+const RoomFront = ({roomid, video_en, changemode, peersRef, num ,name ,Container, StyledVideo, userVideo, Video,  peers, muteUnmute, playStop, leaveMeet, sendmess}) => {
 
     const [mess, setMess] = useState('')
 
@@ -19,8 +28,17 @@ const RoomFront = ({video_en, changemode, peersRef, num ,name ,Container, Styled
         setMess('')
     }
 
+    const invite = () => {
+        prompt(
+            "Copy this room ID and send it to people you want to meet with",
+            roomid
+            
+          );
 
+    }
     
+
+
     return (
         <div>
             <div class="main">
@@ -34,6 +52,7 @@ const RoomFront = ({video_en, changemode, peersRef, num ,name ,Container, Styled
                                     console.log('roomfron from', peer)
                                 return (
                                     <>
+                                    
                                     {peer.videoM? (<Video key={index} peer={peer} />
                                     ): (<h1>hey</h1>)}
                                     {/* <Video key={index} peer={peer} /> */}
@@ -47,7 +66,7 @@ const RoomFront = ({video_en, changemode, peersRef, num ,name ,Container, Styled
                     <div class="main__controls">
                         <div class="main__controls__block">
                             <button onClick={muteUnmute} class="main__controls__button main__mute_button">
-                                <i class="fas fa-microphone"></i>
+                                {/* <Icon className="fas fa-microphone"/> */}
                                 <span>Mute</span>
                             </button>
                             <button onClick={playStop} class="main__controls__button main__video_button" >
@@ -57,23 +76,29 @@ const RoomFront = ({video_en, changemode, peersRef, num ,name ,Container, Styled
                         </div>
                         <div class="main__controls__block">
                             <div class="main__controls__button">
-                               <button onClick={changemode}>
-                                <span>chatMode</span>
-                                </button>
+                               <QuestionAnswerIcon onClick={changemode} class="main__controls__button_chat" style={{ color: 'white'}}>
+                                <span>ChatRoom</span>
+                                </QuestionAnswerIcon>
                             </div>
                             <div class="main__controls__button">
-                                <i class="fas fa-user-friends"></i>
-                                <span>Participants</span>
+                                <PersonAddIcon onClick={invite} class="main__controls__button main__video_button">
+                                <span>Invite</span>
+                                </PersonAddIcon>
                             </div>
-                            <div class="main__controls__button">
-                                <i class="fas fa-comment-alt"></i>
-                                <span>Chat</span>
-                            </div>
+                            {/* <div class="main__controls__button">
+                                <ListAltIcon onClick={openToDo} >
+                                <span>ToDo</span>
+                                </ListAltIcon>
+                            </div> */}
                         </div>
                         <div class="main__controls__block">
-                            <button onClick={leaveMeet} class="main__controls__button">
-                                <span class="leave_meeting">Leave Meeting</span>
-                            </button>
+                        <Button variant="contained" color="secondary" startIcon={<PhoneDisabled fontSize="large"/>} fullWidth onClick={leaveMeet}>
+                                    Hang Up
+                                </Button>
+                            {/* <button onClick={leaveMeet} color="red" >
+                            <span class="leave_meeting">Leave Meeting</span>
+                            </button> */}
+                        
                         </div>
                     </div>
                 </div>

@@ -72,6 +72,7 @@ const Room = (props) => {
     const roomID = props.roomId
     var participants = 0;
     // var parti_num = 0
+    const [mute, setMute] = useState(false)
     
 
     useEffect(() => {
@@ -86,7 +87,7 @@ const Room = (props) => {
         //     var a = false
         
         // }
-        console.log('just checking peers 1', peers)
+        // console.log('just checking peers 1', peers)
         
         // id_t = socketRef.current.id
         navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
@@ -102,7 +103,7 @@ const Room = (props) => {
             socketRef.current.emit("join room", { mode: false ,roomID, enteredName});
             // setNum(pre_num => pre_num+1)
             socketRef.current.on("all users", users => {
-                console.log('just checking peersREf 1', peersRef)
+                // console.log('just checking peersREf 1', peersRef)
                 // console.log('all user from room:', users)
                 setAllUser(users)
                 const t_parti =  users.length
@@ -128,11 +129,11 @@ const Room = (props) => {
                 // setPeers(peers);
                 // setPeers(users => [...users, {peer: peer, name: peerName}])
             })
-            console.log('just checking peers 2', peers)
-            console.log('just checking peersREf 2', peersRef)
+            // console.log('just checking peers 2', peers)
+            // console.log('just checking peersREf 2', peersRef)
 
             socketRef.current.on("user joined", payload => {
-                console.log('just checking peersREf 3', peersRef)
+                // console.log('just checking peersREf 3', peersRef)
                 
                 console.log('2')
                 const peer = addPeer(payload.signal, payload.callerID, stream);
@@ -148,10 +149,10 @@ const Room = (props) => {
 
                 setPeers(users => [...users, {peerID: payload.callerID,peer: peer, name: userName, videoM: true, partis: particpate}]);
             });
-            console.log('just checking peers', peers)
+            // console.log('just checking peers', peers)
 
             socketRef.current.on("receiving returned signal", payload => {
-                console.log('just checking peersREf 4', peersRef)
+                // console.log('just checking peersREf 4', peersRef)
                 // receivereturn(payload)
                 
                 // console.log('4')
@@ -169,37 +170,55 @@ const Room = (props) => {
                 document.getElementById("messShow").append(`User:${mess}`)
 
             })
-            console.log('just checking peersREf 5', peersRef)
-            console.log('just checking peers 3', peers)
+            // console.log('just checking peersREf 5', peersRef)
+            // console.log('just checking peers 3', peers)
 
             socketRef.current.on('userLeaved', in_load => {
-                console.log('ref in leave',peersRef.current )
+                // console.log('ref in leave',peersRef.current )
                 
-                console.log('pers', peers)
+                // console.log('pers', peers)
                 setPeers(peersRef.current)
-                console.log('pers 1', peers)
+                // console.log('pers 1', peers)
 
-                console.log('user leaved,', in_load.userToleave)
+                // console.log('user leaved,', in_load.userToleave)
 
                 setPeers(peers.filter(users => users.name != in_load.userToleave))
-                console.log('ref in leave', peersRef)
+                // console.log('ref in leave', peersRef)
                 peersRef.current.forEach(user => {
                     if(user.name == in_load.userToleave){
                         user.peer.destroy()
                     }
                 })
                 const new_lis = peersRef.current.filter(users => users.name !== in_load.userToleave)
-                console.log('list if new,', new_lis)
+                // console.log('list if new,', new_lis)
 
                 peersRef.current = new_lis
-                console.log('last ref', peersRef.current)
+                // console.log('last ref', peersRef.current)
             })
-            console.log('just checking peers 4', peers)
+            // console.log('just checking peers 4', peers)
             // console.log('num_in', num)
 
         })
-        console.log('just checking peers 5', peers)
-        console.log('just checking peersREf 6', peersRef)
+        // console.log('just checking peers 5', peers)
+        // console.log('just checking peersREf 6', peersRef)
+
+        console.log('pre_chats', props.pre_chats)
+
+        props.pre_chats.forEach(chat => {
+            if(chat.rec_name === 'Me'){ document.getElementById("messShow").innerHTML += `<h4>Me</h4>&nbsp${chat.sender_mess}`
+            }else{
+                document.getElementById("messShow").innerHTML += `<div class="message-received">
+                <div class="sender-details">
+                    <span class="sender-name">${chat.rec_name}</span>
+                </div>
+                <div class="actual-message">
+                    ${chat.rec_mess}</div>
+            </div>`
+                
+
+            }
+          
+        })
 
         return () => {
             setPeers([]); // This worked for me
@@ -329,14 +348,14 @@ const Room = (props) => {
         document.querySelector('.main__mute_button').innerHTML = html;
     }
 
-    const leaveMeet = () => {
+    // const leaveMeet = () => {
 
-        peers.forEach(p =>{
-            p.peer.destroy()
-            console.log('It Finished!!!')})
-        socketRef.current.emit('discnt', {id_to_kick: socketRef.current.id, curr_roomId: roomID})    
-        props.history.push('/exits/')  
-    }
+    //     peers.forEach(p =>{
+    //         p.peer.destroy()
+    //         console.log('It Finished!!!')})
+    //     socketRef.current.emit('discnt', {id_to_kick: socketRef.current.id, curr_roomId: roomID})    
+    //     props.history.push('/')  
+    // }
     // console.log('This is peerRef', peersRef.current)
     if(peers.slice(-1)[0] == undefined){
         participants = 1
@@ -401,9 +420,9 @@ const Room = (props) => {
 
 
     return (
-        <RoomFront video_en ={true} changemode = {changeMode} peersRef = {peersRef} num = {participants} name={name} Container={Container} Video={Video} StyledVideo={StyledVideo}
+        <RoomFront roomid = {roomID} video_en ={true} changemode = {changeMode} peersRef = {peersRef} num = {participants} name={name} Container={Container} Video={Video} StyledVideo={StyledVideo}
         userVideo={userVideo} peers={peers} muteUnmute={muteUnmute} playStop={playStop} 
-        leaveMeet={leaveMeet} sendmess={sendmess} />
+        leaveMeet={props.leaveroom} sendmess={sendmess} />
         )
 
 

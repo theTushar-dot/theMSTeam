@@ -3,8 +3,9 @@ import ReactDOM from 'react-dom'
 import './chatroomcss.css'
 import VideoCallIcon from '@material-ui/icons/VideoCall';
 import SendIcon from '@material-ui/icons/Send';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
-const ChatNew = ({parti_s, partis, sendmess, v_on, inChat}) => {
+const ChatNew = ({leaveroom ,parti_s, partis, sendmess, v_on, inChat}) => {
     const time = new Date().toLocaleTimeString();
     const date = new Date().toLocaleDateString();
     const [mess, setMess] = useState('')
@@ -77,9 +78,19 @@ const ChatNew = ({parti_s, partis, sendmess, v_on, inChat}) => {
                 </div>
                 <div class="column_right">
                     <div class="user-detail-section">
-                        {/* {inChat?(<VideoCallIcon class="material-icons" title="Video call" onClick={v_on} />):
-                        (<button>leave</button>)} */}
-                        <VideoCallIcon class="material-icons" title="Video call" onClick={v_on} />
+                        {inChat?(
+                        <div class="main_icons">   
+                            <div class='video_icon'>
+                            <VideoCallIcon class="material-icons" title="Video call" onClick={v_on} />
+                            </div>
+                            <div class="exit_icon">
+                                <ExitToAppIcon onClick = {leaveroom}/>
+                            </div>
+                        </div>):
+                        (<div class='exit_icon1'>
+                        <ExitToAppIcon onClick = {leaveroom}/>
+                        </div>)}
+                        {/* <VideoCallIcon class="material-icons" title="Video call" onClick={v_on} /> */}
                     </div>
                     <div class="user-chat-section">
                         <div class="message-container">

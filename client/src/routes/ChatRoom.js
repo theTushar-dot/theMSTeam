@@ -13,8 +13,10 @@ const ChatRoom = (props) => {
     const [inChat, setInChat] = useState(true)
     const [chatM, setChatM] = useState(true)
     const [videoM, setVideoM] = useState(false)
-    const [mount, setMount] = useState(0)
+    const [m_clk, setM_clk] = useState(0)
+    const chatlist_str = []
     var flag = false
+    const [chatlist, setChatlist] = useState([])
     const roomID = props.match.params.roomID;
     var participants = 0;
     const [names, setNames] = useState('')
@@ -23,13 +25,15 @@ const ChatRoom = (props) => {
 
     useEffect(() => {
         console.log('C1')
-        // const enteredName = prompt('Please enter your name')
+        const enteredName = prompt('Please enter your name')
 
-        const enteredName = window.name
+        // const enteredName = window.name
         // setNum(pre => pre = 1)
         setNames(enteredName)
         console.log('Its name', enteredName)
         socketRef.current = io('http://localhost:5000')
+
+        
 
         socketRef.current.emit("join room", {mode: true, chatMode: chatM, videoMode: videoM ,roomID, enteredName});
         socketRef.current.on("all users chat", users => {
@@ -91,11 +95,65 @@ const ChatRoom = (props) => {
             <div class="actual-message">
                 ${mess.messToSend}</div>
         </div>`
+            
+            setChatlist(chats => [...chats, {rec_name: mess.messFrom, rec_mess: mess.messToSend}])
+            
+            // chatlist.push({rec_name: mess.messFrom, rec_mess: mess.messToSend})
+            // console.log('chatlist', chatlist)
 
 
         })
 
     }, [])
+
+    const parti_inRoom = (name) => {
+        if(document.getElementById("partis") !== null ){
+        document.getElementById("partis").innerHTML += `<div class="user-chat">
+            <div class="usr-card">
+                <div class="username">
+                    <span class="name">${name}       ${time}</span>
+                </div>
+            </div>
+        </div>`
+
+    }}
+
+    useEffect(() => {
+
+        partiName.forEach( name =>{
+            parti_inRoom(name)
+        })
+
+
+        const chat_str = window.sessionStorage.getItem("chatroom")
+        console.log('it works', chat_str)
+        if(chat_str !== null){
+        const chat_obj = JSON.parse("[" + chat_str + "]")
+
+        chat_obj.forEach(chat => {
+            if(chat.rec_name === 'Me'){
+                document.getElementById("messShow").innerHTML += `<div class="message-sent">
+                <div class="timestamp">${time}
+                <div class="actual-message">
+                    ${chat.sender_mess}</div>
+            </div>`
+            }else{
+                document.getElementById("messShow").innerHTML += `<div class="message-received">
+                <div class="sender-details">
+                    <span class="sender-name">${chat.rec_name}</span>
+                    <span class="timestamp">${time}</span>
+                </div>
+                <div class="actual-message">
+                    ${chat.rec_mess}</div>
+            </div>`
+                
+
+            }
+          
+        })
+    }
+        
+    }, [m_clk])
 
     const just = (peersRef, mess) =>{
         peersRef.current.forEach(p =>{
@@ -112,22 +170,7 @@ const ChatRoom = (props) => {
 
     }
 
-
-    const parti_inRoom = (name) => {
-        if(document.getElementById("partis") !== null ){
-        document.getElementById("partis").innerHTML += `<div class="user-chat">
-            <div class="usr-card">
-                <div class="username">
-                    <span class="name">${name}       ${time}</span>
-                </div>
-            </div>
-        </div>`
-
-    }}
-
     
-
-
     const sendmess = () => {
         const just_input = document.getElementById("sendMessage").value
         // document.getElementById("messShow").append(`Me:${just_input}`)
@@ -136,9 +179,12 @@ const ChatRoom = (props) => {
         <div class="actual-message">
             ${just_input}</div>
     </div>`
-
-
         juston(just_input)
+
+        setChatlist(chats => [...chats, {rec_name: 'Me', sender_mess: just_input}])
+
+        // chatlist.push({sender:just_input})
+        // console.log('chatlist', chatlist)
 
     }
     if(peers.slice(-1)[0] == undefined){
@@ -170,11 +216,39 @@ const ChatRoom = (props) => {
         setChatM(true)
         setVideoM(false)
         setInChat(false)
+        setM_clk(pre => pre+1)
 
         socketRef.current.emit('changetoVMode', {curr_id: socketRef.current.id, C_M: true, V_M:false, roomId: roomID})
 
 
     }
+
+    useEffect(()=>{
+        chatlist.forEach(chat => {
+            const chat_string = JSON.stringify(chat)
+            chatlist_str.push(chat_string)
+
+          })
+
+        const final_chats = chatlist_str.toString()
+
+        window.sessionStorage.setItem("chatroom", final_chats);
+        console.log('updated')
+        console.log('chatstr', chatlist_str)
+        console.log('just checking', JSON.parse("[" + final_chats + "]"))
+
+    }, [chatlist])
+
+    const leaveRoom = () => {
+
+        peers.forEach(p =>{
+            p.peer.destroy()
+            console.log('It Finished!!!')})
+        socketRef.current.emit('discnt', {id_to_kick: socketRef.current.id, curr_roomId: roomID})    
+        props.history.push('/')  
+    }
+
+    // console.log('chatstr', chatlist_str)
 
     // const interval = setInterval(() => {
     //     setMount(pre => pre +1)
@@ -212,27 +286,19 @@ const ChatRoom = (props) => {
 
     // useEffect(() => {
 
-  
+    console.log('list', chatlist)
+    console.log('partisname', partiName)
 
 
-
-
-
-    // })
-    // var intervalId = setInterval(this.timer, 1000);/
-
-    console.log('it peers from chat:', peers)
-    console.log('it peerRef from chat:', peersRef)
-    console.log('it partis:', partiName)
     
     return (
         // <div>
         
         <div>
         { !video_en ? (
-        <ChatNew partis = {participants} sendmess = {sendmess} v_on= {openVRoom}  inChat = {inChat} parti_s = {partiName}/>
+        <ChatNew partis = {participants} sendmess = {sendmess} v_on= {openVRoom}  inChat = {inChat} parti_s = {partiName} leaveroom = {leaveRoom}/>
         ): (
-            <Room socketRef = {socketRef} peersRef = {peersRef} peers = {peers} naam = {names} roomId = {roomID} changeToChat = {openCRoom}/>
+            <Room socketRef = {socketRef} peersRef = {peersRef} peers = {peers} naam = {names} roomId = {roomID} changeToChat = {openCRoom} pre_chats= {chatlist} leaveroom = {leaveRoom}/>
         )}
         </div>
 

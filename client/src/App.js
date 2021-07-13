@@ -15,10 +15,10 @@ const App = () => {
 
           <BrowserRouter>
             <Switch>
-              <Route path="/" exact component={LogIn} /> 
-              <Route path="/sign-up" exact component={SignUp} />
-              <Route path='/createroom/:name' exact component={CreateRoom} />
-              {/* <Route path='/' exact component={CreateRoom} /> */}
+              {/* <Route path="/" exact component={LogIn} />  */}
+              {/* <Route path="/sign-up" exact component={SignUp} /> */}
+              {/* <Route path='/createroom/:name' exact component={CreateRoom} /> */}
+              <Route path='/' exact component={CreateRoom} />
               <Route path="/room/:roomID"  component={ChatRoom} />
               {/* <Route path="/video/:roomID" component={Room} /> */}
               <Route path="/exits/" component={Exits} />

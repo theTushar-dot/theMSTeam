@@ -26,25 +26,25 @@ const io = require("socket.io")(server, {
 
 app.use(cors())
 
-const MongoClient = require('mongodb').MongoClient;
-// const db = 'mongodb+srv://mytushar:Tushar@1290@cluster0.vi6xw.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
-const db = process.env.MONGODB_URI || 'mongodb+srv://mytushar:Tushar@1290@cluster0.vi6xw.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
-const client = new MongoClient(db, { useNewUrlParser: true });
+// const MongoClient = require('mongodb').MongoClient;
+// // const db = 'mongodb+srv://mytushar:Tushar@1290@cluster0.vi6xw.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
+// const db = process.env.MONGODB_URI || 'mongodb+srv://mytushar:Tushar@1290@cluster0.vi6xw.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
+// const client = new MongoClient(db, { useNewUrlParser: true });
 const users = {};
 var uuser;
-// var roomid;
-mongoose
-  .connect(
-    db,
-    { useUnifiedTopology: true,
-      useNewUrlParser: true }
-  )
-  .then(() => console.log("MongoDB successfully connected"))
-  .catch(err => console.log(err));
+// // var roomid;
+// mongoose
+//   .connect(
+//     db,
+//     { useUnifiedTopology: true,
+//       useNewUrlParser: true }
+//   )
+//   .then(() => console.log("MongoDB successfully connected"))
+//   .catch(err => console.log(err));
 
 const socketToRoom = {};
 
-const PORT = 3000;
+const PORT = 5000;
 
 app.use('/users', userRoute)
 
@@ -56,10 +56,10 @@ app.use('/users', userRoute)
 
 
 
-// app.get('/', (req, res) => {
-//     // res.send(users)
-//     res.send(users)
-// })
+app.get('/', (req, res) => {
+    // res.send(users)
+    res.send(users)
+})
 
 // app.get('/on', (req, res) => {
 //     // res.send(users)
@@ -166,22 +166,24 @@ io.on('connection', socket => {
 
 });
 
-app.use(express.static('client/build'))
-const path = require('path')
-app.get('*', (res, req) => {
-    res.sendFile(path.resolve(__dirname,'client', 'build', 'index.html'));
-})
 
 
-if((process.env.NODE_ENV || '').trim() !== 'production'){
-    console.log('it work')
-    app.use(express.static('client/build'))
-    const path = require('path')
-    app.get('*', (res, req) => {
-        res.sendFile(path.resolve(__dirname,'client', 'build', 'index.html'));
-    })
-    // just checking
-}
+// app.use(express.static('client/build'))
+// const path = require('path')
+// app.get('*', (res, req) => {
+//     res.sendFile(path.resolve(__dirname,'client', 'build', 'index.html'));
+// })
+
+
+// if((process.env.NODE_ENV || '').trim() !== 'production'){
+//     console.log('it work')
+//     app.use(express.static('client/build'))
+//     const path = require('path')
+//     app.get('*', (res, req) => {
+//         res.sendFile(path.resolve(__dirname,'client', 'build', 'index.html'));
+//     })
+//     // just checking
+// }
 
 
 server.listen(PORT, () => console.log(`Server is running on port ${PORT}...`));

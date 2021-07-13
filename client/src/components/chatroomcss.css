@@ -32,6 +32,32 @@
   .main_container{
     display: flex;
 }
+.main_icons{
+  display: flex;
+
+  /* padding: 20px; */
+}
+
+.video_icon{
+  flex: 0 0 5%;
+
+}
+
+.exit_icon{
+  flex: 1 1 65%;
+  padding-top: 12px;
+  margin-left: 870px
+
+
+}
+
+.exit_icon1{
+  flex: 1 1 65%;
+  padding-top: 12px;
+  margin-left: 920px
+
+
+}
 
 /* .row {
     display: flex;
