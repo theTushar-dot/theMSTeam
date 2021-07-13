@@ -1,4 +1,5 @@
 // importing libraries
+require('dotenv').config()
 const express = require('express') 
 const app = require("express")();
 const server = require("http").createServer(app); // creating the server
@@ -28,8 +29,7 @@ const io = require("socket.io")(server, {
 app.use(cors())
 
 const MongoClient = require('mongodb').MongoClient;
-// const db = 'mongodb+srv://mytushar:Tushar@1290@cluster0.vi6xw.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
-const db = process.env.MONGODB_URI || 'mongodb+srv://mytushar:Tushar@1290@cluster0.vi6xw.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
+const db = process.env.MONGODB_URI
 const client = new MongoClient(db, { useNewUrlParser: true });
 const users = {};
 var uuser;
