@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import CreateRoom from "./routes/CreateRoom";
 import ChatRoom from './routes/ChatRoom';
 import SignUp from './components/SignUp'
-import {LogIn} from './components/LogIn'
+import LogIn from './components/LogIn'
 
 // this js is handling all type of route requests
 

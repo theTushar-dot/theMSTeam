@@ -155,7 +155,7 @@ const ChatRoom = (props) => {
     </div>`
         mess_sent(peersRef, messagetosend )
 
-        setChatlist(chats => [...chats, {rec_name: 'Me', sender_mess: just_input}])
+        setChatlist(chats => [...chats, {rec_name: 'Me', sender_mess: messagetosend}])
 
     }
     if(peers.slice(-1)[0] == undefined){

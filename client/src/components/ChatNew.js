@@ -1,5 +1,8 @@
 import React,{useState} from 'react'
-import {VideoCallIcon, SendIcon, ExitToAppIcon, PersonAddIcon} from '@material-ui/icons'
+import SendIcon from '@material-ui/icons/Send';
+import VideoCallIcon from '@material-ui/icons/VideoCall';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import './chatroomcss.css'
 
 

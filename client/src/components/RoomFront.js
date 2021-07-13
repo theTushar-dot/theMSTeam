@@ -2,8 +2,10 @@ import React,  {useState } from 'react'
 import { Button } from '@material-ui/core'
 import Input from '@material-ui/core/Input'
 import SendIcon from '@material-ui/icons/Send';
+import PersonAddIcon from '@material-ui/icons/PersonAdd';
+import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
 
-import { PhoneDisabled, PersonAddIcon, QuestionAnswerIcon, SendIcon} from '@material-ui/icons'
+import { PhoneDisabled} from '@material-ui/icons'
 import'../routes/styles.css'
 
 // UI for room.js(Video mode) file in routes

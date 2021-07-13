@@ -58,7 +58,7 @@ const LogIn = (props) => {
                                 <input type="email" value={email} onChange={onChangeUserEmail} placeholder="Sign-in address" required id="input-email"/>
                             </div>
                             <div class="signin-input">
-                                <input type="password"  value={pass} onChange={onChangeUserPass}  placeholder="  Password" required id="input-password"/>
+                                <input type="password"  value={pass} onChange={onChangeUserPass}  placeholder="Password" required id="input-password"/>
                             </div>
                             <div class="btn">
                                 <button onClick={loging_in}>Sign in</button>
@@ -78,4 +78,4 @@ const LogIn = (props) => {
 
 
 
-export {LogIn, mail_id}
+export default LogIn
