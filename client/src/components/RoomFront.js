@@ -1,22 +1,14 @@
-import React,  { useEffect, useRef, useState } from 'react'
-import Icon from '@material-ui/core/Icon'
-import { styled } from '@material-ui/styles';
-import { Grid, Typography, Paper, Button } from '@material-ui/core'
+import React,  {useState } from 'react'
+import { Button } from '@material-ui/core'
 import Input from '@material-ui/core/Input'
 import SendIcon from '@material-ui/icons/Send';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-// import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import CallEndIcon from '@material-ui/icons/CallEnd';
-import { PhoneDisabled} from '@material-ui/icons'
-import PersonAddIcon from '@material-ui/icons/PersonAdd';
-import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
-import Todo from '../components/ToDo'
-import ListAltIcon from '@material-ui/icons/ListAlt';
 
-// import styled from "styled-components";
+import { PhoneDisabled, PersonAddIcon, QuestionAnswerIcon, SendIcon} from '@material-ui/icons'
 import'../routes/styles.css'
 
-const RoomFront = ({roomid, video_en, changemode, peersRef, num ,name ,Container, StyledVideo, userVideo, Video,  peers, muteUnmute, playStop, leaveMeet, sendmess}) => {
+// UI for room.js(Video mode) file in routes
+
+const RoomFront = ({roomid, changemode,  num ,userVideo, Video,  peers, muteUnmute, playStop, leaveMeet, sendmess}) => {
 
     const [mess, setMess] = useState('')
 
@@ -104,7 +96,7 @@ const RoomFront = ({roomid, video_en, changemode, peersRef, num ,name ,Container
                 </div>
                 <div class="main__right">
                     <div class="main_counter">
-                        <h2>Total Participants {num} </h2>
+                        <h2>Total Participants: {num} </h2>
                     </div>
                     <div class="main__header">
                         <h2>Message</h2>

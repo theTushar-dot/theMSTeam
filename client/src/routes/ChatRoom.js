@@ -3,9 +3,11 @@ import Room from './room'
 import ChatNew from "../components/ChatNew";
 import io from "socket.io-client";
 
+// this is the chat room here users can chat and then also do the video call
 
 const ChatRoom = (props) => {
-    const [peers, setPeers] = useState([]);
+    // defining some no not some, many state components
+    const [peers, setPeers] = useState([]);             
     const [video_en, setVideo_en] = useState(false)
     const [partiName, setPartiName] = useState([])
     const socketRef = useRef();
@@ -21,33 +23,24 @@ const ChatRoom = (props) => {
     var participants = 0;
     const [names, setNames] = useState('')
     const time = new Date().toLocaleTimeString();
-    // var video_en = false
+
+    // useEffect to use the following code when app mounted
 
     useEffect(() => {
         console.log('C1')
-        const enteredName = prompt('Please enter your name')
-
-        // const enteredName = window.name
-        // setNum(pre => pre = 1)
+        const enteredName = window.name // getting user name 
         setNames(enteredName)
         console.log('Its name', enteredName)
-        socketRef.current = io('http://localhost:5000')
-
-        
+        socketRef.current = io('http://localhost:5000')  //connecting to the backend
 
         socketRef.current.emit("join room", {mode: true, chatMode: chatM, videoMode: videoM ,roomID, enteredName});
         socketRef.current.on("all users chat", users => {
-            console.log('all user from chat:', users)
-            console.log('C2')
             const t_parti =  users.length
-            // numRef.current =users.length 
-            // setNum(users.length)
             const peers = [];
-            users.forEach(inr_user => {
-                if(inChat){
+            users.forEach(inr_user => {    //making peer connections to already present peer(users) in the room
+                if(inChat){             // using some smart logic(jugaad**) 
                 parti_inRoom(inr_user.name)
-                setPartiName(user => [...user, inr_user.name])}
-                console.log('C3')                
+                setPartiName(user => [...user, inr_user.name])}            
                 socketRef.current.emit("sending signal chat", { chatroom: true, userToSignal: inr_user.id, callerID: socketRef.current.id,name: enteredName, parti_n: t_parti})
                 const peerName = inr_user.name
                 peersRef.current.push({
@@ -55,22 +48,17 @@ const ChatRoom = (props) => {
                     name: peerName, 
                 })
                 peers.push({name: peerName});
-                setPeers(users => [...users, { name: peerName, partis: t_parti}])
+                setPeers(users => [...users, { name: peerName, partis: t_parti}])  // storing the users info for chatting and all
             })
 
         })
 
-        socketRef.current.on("user joined chat", payload => {
+        socketRef.current.on("user joined chat", payload => {  // when someone new joins and sends u peer connection
             if(inChat){
             parti_inRoom(payload.callName)
             setPartiName(user => [...user, payload.callName])}
-            console.log('C4')
-            // const peer = addPeer(payload.signal, payload.callerID, stream);
-            // socketRef.current.emit("returning signal", { chatroom: true, callerID: payload.callerID })
             const userName = payload.callName
             const particpate = payload.num_parti
-            // const parti_num = payload.user_c.length
-            // setNum(parti_num)
             peersRef.current.push({
                 peerID: payload.callerID,
                 name: userName, 
@@ -80,33 +68,23 @@ const ChatRoom = (props) => {
 
         });
 
-        // socketRef.current.on("receiving returned signal", payload => {
-        //     // const item = peersRef.current.find(p => p.peerID === payload.id);
-        //     // item.peer.signal(payload.signal);
-        // });
-        socketRef.current.on('createMessage chat', mess => {
-            // console.log(mess)
-            // document.getElementById("messShow").append(`User:${mess}`)
-            document.getElementById("messShow").innerHTML += `<div class="message-received">
+        socketRef.current.on('createMessage chat', mess => {  // whensome sends message the how u response
+            document.getElementById("messShow").innerHTML += `<div class="message-received"> 
             <div class="sender-details">
                 <span class="sender-name">${mess.messFrom}</span>
-                <span class="timestamp">${time}</span>
             </div>
             <div class="actual-message">
                 ${mess.messToSend}</div>
         </div>`
-            
-            setChatlist(chats => [...chats, {rec_name: mess.messFrom, rec_mess: mess.messToSend}])
-            
-            // chatlist.push({rec_name: mess.messFrom, rec_mess: mess.messToSend})
-            // console.log('chatlist', chatlist)
 
-
+            // using this for session storage to store chat of users for a single session
+            setChatlist(chats => [...chats, {rec_name: mess.messFrom, rec_mess: mess.messToSend}]) 
+        
         })
 
     }, [])
 
-    const parti_inRoom = (name) => {
+    const parti_inRoom = (name) => {    // just updating the participants in the ui
         if(document.getElementById("partis") !== null ){
         document.getElementById("partis").innerHTML += `<div class="user-chat">
             <div class="usr-card">
@@ -117,6 +95,8 @@ const ChatRoom = (props) => {
         </div>`
 
     }}
+
+    // again some smart logic(jugaad**) to store the chats correctly
 
     useEffect(() => {
 
@@ -133,7 +113,7 @@ const ChatRoom = (props) => {
         chat_obj.forEach(chat => {
             if(chat.rec_name === 'Me'){
                 document.getElementById("messShow").innerHTML += `<div class="message-sent">
-                <div class="timestamp">${time}
+
                 <div class="actual-message">
                     ${chat.sender_mess}</div>
             </div>`
@@ -141,7 +121,6 @@ const ChatRoom = (props) => {
                 document.getElementById("messShow").innerHTML += `<div class="message-received">
                 <div class="sender-details">
                     <span class="sender-name">${chat.rec_name}</span>
-                    <span class="timestamp">${time}</span>
                 </div>
                 <div class="actual-message">
                     ${chat.rec_mess}</div>
@@ -155,36 +134,28 @@ const ChatRoom = (props) => {
         
     }, [m_clk])
 
-    const just = (peersRef, mess) =>{
+
+    const mess_sent = (peersRef, mess) =>{  // send the message to every peer
         peersRef.current.forEach(p =>{
             var idTo = p.peerID
-            // console.log(idTo)
 
         socketRef.current.emit('message', { message: mess, id :idTo, from: names})}
         )
 
     }
-    const juston = (mess) =>{
-        just(peersRef, mess)
-        
-
-    }
-
     
-    const sendmess = () => {
-        const just_input = document.getElementById("sendMessage").value
+    const sendmess = () => {   // geting mess to send to all users from text input 
+        const messagetosend = document.getElementById("sendMessage").value
         // document.getElementById("messShow").append(`Me:${just_input}`)
         document.getElementById("messShow").innerHTML += `<div class="message-sent">
-        <div class="timestamp">${time}
+        <h4>You</h4>
+       
         <div class="actual-message">
-            ${just_input}</div>
+            ${messagetosend}</div>
     </div>`
-        juston(just_input)
+        mess_sent(peersRef, messagetosend )
 
         setChatlist(chats => [...chats, {rec_name: 'Me', sender_mess: just_input}])
-
-        // chatlist.push({sender:just_input})
-        // console.log('chatlist', chatlist)
 
     }
     if(peers.slice(-1)[0] == undefined){
@@ -195,23 +166,23 @@ const ChatRoom = (props) => {
 
     }
 
+
+    // when user opens the video mode the some updates to let others know the user is going to the video chat
     const openVRoom = () => {
-        // props.history.push(`/video/${roomID}`)
-        // props.history.push(`/video/${roomID}`);
         setVideo_en(true)
         setChatM(false)
         setVideoM(true)
         setInChat(false)
-        // setInChat(false)
 
         socketRef.current.emit('changetoVMode', {curr_id: socketRef.current.id, C_M: false, V_M: true, roomId: roomID})
 
 
     }
 
+    // when user opens the chat mode again the the some updates to let others know the user is going to the video chat
+
     const openCRoom = () => {
-        // props.history.push(`/video/${roomID}`)
-        // props.history.push(`/video/${roomID}`);
+
         setVideo_en(false)
         setChatM(true)
         setVideoM(false)
@@ -222,6 +193,8 @@ const ChatRoom = (props) => {
 
 
     }
+
+    //use this to set message on the front end when user come from the video mode 
 
     useEffect(()=>{
         chatlist.forEach(chat => {
@@ -239,64 +212,19 @@ const ChatRoom = (props) => {
 
     }, [chatlist])
 
-    const leaveRoom = () => {
+    // when user leaves the chat mode and then direct them to the home
 
-        peers.forEach(p =>{
-            p.peer.destroy()
-            console.log('It Finished!!!')})
-        socketRef.current.emit('discnt', {id_to_kick: socketRef.current.id, curr_roomId: roomID})    
-        props.history.push('/')  
+    const leaveRoom = () => {   
+        props.history.push(`/createroom/${window.name}`)  
     }
-
-    // console.log('chatstr', chatlist_str)
-
-    // const interval = setInterval(() => {
-    //     setMount(pre => pre +1)
-    //   }, 1000);
-
-    // if(mount == 5000){
-    //     flag = true
-      
-    // }
-    // useEffect(()=> {
-    //     if(!inChat){
-    //             console.log('names')
-    //             socketRef.current.on('partis_inroom', users => {
-    //                 console.log('it usessr', users)
-    //             })
-        
-    //             partiName.forEach(p => {
-    //                 parti_inRoom(p)
-                    
-        
-    //             })}
-
-    // }, [flag])
-    // if(!inChat){
-    //     console.log('names')
-    //     socketRef.current.on('partis_inroom', users => {
-    //         console.log('it usessr', users)
-    //     })
-
-    //     partiName.forEach(p => {
-    //         parti_inRoom(p)
-            
-
-    //     })}
-
-    // useEffect(() => {
-
-    console.log('list', chatlist)
-    console.log('partisname', partiName)
-
 
     
     return (
-        // <div>
-        
+         // ChatNew is the html type code for chat room things and,
+         // Room is when user switch to video mode 
         <div>
         { !video_en ? (
-        <ChatNew partis = {participants} sendmess = {sendmess} v_on= {openVRoom}  inChat = {inChat} parti_s = {partiName} leaveroom = {leaveRoom}/>
+        <ChatNew roomId = {roomID} partis = {participants} sendmess = {sendmess} v_on= {openVRoom}  inChat = {inChat} parti_s = {partiName} leaveroom = {leaveRoom}/>
         ): (
             <Room socketRef = {socketRef} peersRef = {peersRef} peers = {peers} naam = {names} roomId = {roomID} changeToChat = {openCRoom} pre_chats= {chatlist} leaveroom = {leaveRoom}/>
         )}

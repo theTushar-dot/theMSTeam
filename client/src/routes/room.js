@@ -1,16 +1,11 @@
 import React, {useEffect, useRef, useState} from "react";
-import io from "socket.io-client";
 import Peer from "simple-peer";
-// import {Redirect, BrowserRouter, Link} from 'react-router-dom';
 import RoomFront from "../components/RoomFront";
-import { Grid, Typography, Paper } from '@material-ui/core'
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-
 import styled from "styled-components";
 import'./styles.css'
 
-// const RoomContext = createContext();
 
+// some styling for videos of the users
 const Container = styled.div`
     padding: 20px;
     display: flex;
@@ -25,7 +20,7 @@ const StyledVideo = styled.video`
     width: 50%;
 `;
 
-
+// use to show the peers video in the UI
 const Video = (props) => {
     const ref = useRef();
 
@@ -44,79 +39,43 @@ const Video = (props) => {
 }
 
 
-// const videoConstraints = {
-//     height: window.innerHeight / 2,
-//     width: window.innerWidth / 2
-// };
-
 const Room = (props) => {
-
-    
-    // console.log('it peers from room:', props.peers)
-    // console.log('it peerRef from room:', props.peersRef)
-    // console.log('it socketref from room:', props.socketRef)
-
     const [peers, setPeers] = useState([]);
     const [strm, setStrm] = useState()
     const [name, setName] = useState('')
-    const [num, setNum] = useState(0)
     const [allUser, setAllUser] = useState()
-    // const [video_en, setVideo_en] = useState(false)
-    // var users_in = []
-    // const socketRef = useRef();
     const socketRef = props.socketRef
     const userVideo = useRef();
     const peersRef = useRef([]);
-    const numRef = useRef()
-    // const roomID = props.match.params.roomID;
     const roomID = props.roomId
     var participants = 0;
-    // var parti_num = 0
-    const [mute, setMute] = useState(false)
     
+    
+    // when room.js mounts the it runs
 
     useEffect(() => {
-        // const enteredName = prompt('Please enter your name')
         const enteredName = props.naam
-        // // setNum(pre => pre = 1)
         setName(enteredName)
-        // const enteredName = props.naam
-        console.log('Its name', enteredName)
-        // socketRef.current = io('http://localhost:5000')
-        // if(!video_en){
-        //     var a = false
-        
-        // }
-        // console.log('just checking peers 1', peers)
-        
-        // id_t = socketRef.current.id
-        navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
-            // if(video_en){
-            userVideo.current.srcObject = stream
-            // ;}
-            // else{
-                // userVideo.current.srcObject = 'hello'
 
-            // }
+        console.log('Its name', enteredName)
+        
+        // getting the users video stream 
+        navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
+
+            userVideo.current.srcObject = stream
 
             setStrm(stream)
-            socketRef.current.emit("join room", { mode: false ,roomID, enteredName});
-            // setNum(pre_num => pre_num+1)
+            socketRef.current.emit("join room", { mode: false ,roomID, enteredName}); // letting other know that new user joined
             socketRef.current.on("all users", users => {
-                // console.log('just checking peersREf 1', peersRef)
-                // console.log('all user from room:', users)
+        
                 setAllUser(users)
                 const t_parti =  users.length
-                // numRef.current =users.length 
-                // setNum(users.length)
+    
                 const peers = [];
                 users.forEach(inr_user => {
-                    // console.log()
-
-                    console.log('-1')
+    
                     if (inr_user.videoMode){
-                        console.log('1')
-                    const peer = createPeer(inr_user.id, socketRef.current.id, stream, enteredName, t_parti);
+                    const peer = createPeer(inr_user.id, socketRef.current.id, stream, enteredName, t_parti);// new user makes the peers connects with all othe users in the room
                     const peerName = inr_user.name
                     peersRef.current.push({
                         peerID: inr_user.id,
@@ -124,83 +83,54 @@ const Room = (props) => {
                         peer,
                     })
                     peers.push({peer: peer, name: peerName});
-                    setPeers(users => [...users, {peerID: inr_user.id, peer: peer, name: peerName, videoM: true, partis: t_parti}])
+                    setPeers(users => [...users, {peerID: inr_user.id, peer: peer, name: peerName, videoM: true, partis: t_parti}])  
                 }})
-                // setPeers(peers);
-                // setPeers(users => [...users, {peer: peer, name: peerName}])
             })
-            // console.log('just checking peers 2', peers)
-            // console.log('just checking peersREf 2', peersRef)
 
-            socketRef.current.on("user joined", payload => {
-                // console.log('just checking peersREf 3', peersRef)
+            socketRef.current.on("user joined", payload => {  // now the peers who are already in the room gonna response
                 
-                console.log('2')
-                const peer = addPeer(payload.signal, payload.callerID, stream);
+                const peer = addPeer(payload.signal, payload.callerID, stream);  // existing users make peer connection with new user
                 const userName = payload.callName
                 const particpate = payload.num_parti
-                // const parti_num = payload.user_c.length
-                // setNum(parti_num)
+        
                 peersRef.current.push({
                     peerID: payload.callerID,
                     name: userName, 
                     peer,
                 })
 
-                setPeers(users => [...users, {peerID: payload.callerID,peer: peer, name: userName, videoM: true, partis: particpate}]);
+                setPeers(users => [...users, {peerID: payload.callerID,peer: peer, name: userName, videoM: true, partis: particpate}]); 
             });
-            // console.log('just checking peers', peers)
 
-            socketRef.current.on("receiving returned signal", payload => {
-                // console.log('just checking peersREf 4', peersRef)
-                // receivereturn(payload)
-                
-                // console.log('4')
-                // console.log('peerrefff:', peersRef)
-                // console.log('peeeeer:', peers)
-                // const item = peersRef.current.find(p => p.peerID === payload.id);
+            socketRef.current.on("receiving returned signal", payload => {;
                 const item = peersRef.current.find(p => p.peerID === payload.id);
-                // console.log('it is item:',item)
-                item.peer.signal(payload.signal);
+                item.peer.signal(payload.signal);  // finally peer connection made by new user
 
             });
             
-            socketRef.current.on('createMessage', mess => {
+            socketRef.current.on('createMessage', mess => {  
                 console.log(mess)
                 document.getElementById("messShow").append(`User:${mess}`)
 
             })
-            // console.log('just checking peersREf 5', peersRef)
-            // console.log('just checking peers 3', peers)
 
             socketRef.current.on('userLeaved', in_load => {
-                // console.log('ref in leave',peersRef.current )
-                
-                // console.log('pers', peers)
+        
                 setPeers(peersRef.current)
-                // console.log('pers 1', peers)
-
-                // console.log('user leaved,', in_load.userToleave)
-
                 setPeers(peers.filter(users => users.name != in_load.userToleave))
-                // console.log('ref in leave', peersRef)
+        
                 peersRef.current.forEach(user => {
                     if(user.name == in_load.userToleave){
                         user.peer.destroy()
                     }
                 })
                 const new_lis = peersRef.current.filter(users => users.name !== in_load.userToleave)
-                // console.log('list if new,', new_lis)
-
+    
                 peersRef.current = new_lis
-                // console.log('last ref', peersRef.current)
             })
-            // console.log('just checking peers 4', peers)
-            // console.log('num_in', num)
+
 
         })
-        // console.log('just checking peers 5', peers)
-        // console.log('just checking peersREf 6', peersRef)
 
         console.log('pre_chats', props.pre_chats)
 
@@ -221,34 +151,31 @@ const Room = (props) => {
         })
 
         return () => {
-            setPeers([]); // This worked for me
-            // peersRef.current.destroy()
+            setPeers([]); // clearing the data after user unmounts
             userVideo.current = null
             peersRef.current = []
 
 
           };
-
-       
-       
+   
  
     }, []);
 
-    function createPeer(userToSignal, callerID, stream, name, parti_n) {
+    function createPeer(userToSignal, callerID, stream, name, parti_n) {  // new user initiate the peer connect
         const peer = new Peer({
             initiator: true,
             trickle: false,
             stream,
-        });
+        });  
 
         peer.on("signal", signal => {
-            socketRef.current.emit("sending signal", { chatroom: false, userToSignal, callerID, signal, name, parti_n })
+            socketRef.current.emit("sending signal", { chatroom: false, userToSignal, callerID, signal, name, parti_n })  
         })
 
         return peer;
     }
 
-    function addPeer(incomingSignal, callerID, stream) {
+    function addPeer(incomingSignal, callerID, stream) { // existing peer adding the new user
         console.log('3')
         const peer = new Peer({
             initiator: false,
@@ -264,13 +191,7 @@ const Room = (props) => {
 
         return peer;
     }
-    const just = (peersRef, mess) =>{
-        // peersRef.current.forEach(p =>{
-        //     var idTo = p.peerID
-        //     // console.log(idTo)
-        // console.log('mess room')
-        // socketRef.current.emit('message', { message: mess,id :idTo})}
-        // )
+    const messSent = (mess) =>{
         allUser.forEach(user => {
             var idTo = user.id
 
@@ -279,18 +200,16 @@ const Room = (props) => {
         })
 
     }
-    const juston = (mess) =>{
-        just(peersRef, mess)
-        
-
-    }
 
     const sendmess = () => {
-        const just_input = document.getElementById("chat_message").value
-        document.getElementById("messShow").innerHTML += `<h4>Me</h4>&nbsp${just_input}`
-        juston(just_input)
+        const message_input = document.getElementById("chat_message").value
+        document.getElementById("messShow").innerHTML += `<h4>Me</h4>&nbsp${message_input}`
+        messSent(message_input)
 
     }
+
+    // changing the video audio and stream
+    // like mute and play video or stop video
 
     const playStop = () => {
         console.log('yeah.it pressed')
@@ -348,15 +267,7 @@ const Room = (props) => {
         document.querySelector('.main__mute_button').innerHTML = html;
     }
 
-    // const leaveMeet = () => {
 
-    //     peers.forEach(p =>{
-    //         p.peer.destroy()
-    //         console.log('It Finished!!!')})
-    //     socketRef.current.emit('discnt', {id_to_kick: socketRef.current.id, curr_roomId: roomID})    
-    //     props.history.push('/')  
-    // }
-    // console.log('This is peerRef', peersRef.current)
     if(peers.slice(-1)[0] == undefined){
         participants = 1
         
@@ -373,50 +284,25 @@ const Room = (props) => {
 
     }
 
+    // when user left for chat mode
+
     const changeMode = () => {
-        // peersRef.current.forEach(p =>{
-        //     p.peer.destroy()
-        //     // p.videoM = false
-        //     console.log('It Finished!!!')})
-        // peersRef.current.destroy()
-        // userVideo.current.destroy()
+
         strm.getTracks().forEach((track) => {
             track.stop();
         })
-
-        // socketRef.current.emit('discnt', {id_to_kick: socketRef.current.id, curr_roomId: roomID}) 
-        // console.log('peers in levae', peers)
-        // console.log('refpeers in leave', peersRef)
         peers.forEach(p =>{
             var idTo = p.peerID
-            // p.peer.destroy()
             console.log(idTo)
 
         socketRef.current.emit('imleaving', { name, idTo})}
         )
-        console.log('peers in levae after', peers)
-        console.log('refpeers in leave after', peersRef)
 
         console.log('bye')
-        // socketRef.current.emit("join room", { mode: false ,roomID, enteredName}) 
         props.changeToChat()
 
         
     }
-    // console.log('peers_outs', peers.slice(-1)[0].partis)
-    // console.log('namee', name)
-    // console.log('my', roomID)
-    // console.log('num_out', parti_num)
-    // console.log('num_ot', num)
-    // console.log('num', num)
-    // console.log('num_in', num)
-    // console.log('peerref', peersRef)
-    // console.log('my ref', socketRef.current)
-    console.log('it peers from room:', peers)
-    console.log('it peerRef from room:', peersRef)
-    console.log('it socketref from room:', socketRef)
-    console.log('fucking!!!!', allUser)
-    // changemode = {changeMode}
 
 
     return (

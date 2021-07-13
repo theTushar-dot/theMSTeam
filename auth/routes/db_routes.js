@@ -4,7 +4,9 @@ const router = express.Router();
 
 let user = require('../model_db/db_schema');
 
-router.route('/create').post((req, res, next) => {
+// just specifing the route for mongoDB like get data from database and post something to it
+
+router.route('/create').post((req, res, next) => {    // for signup
     user.create(req.body, (error, data) => {
         if (error) {
             return next(error)
@@ -15,7 +17,7 @@ router.route('/create').post((req, res, next) => {
     })
 });
 
-router.route('/').get((req, res) => {
+router.route('/').get((req, res) => {      // just fecting for debuging purposes
     user.find((error, data) => {
         if (error) {
             return next(error)
@@ -25,7 +27,7 @@ router.route('/').get((req, res) => {
     })
 })
 
-router.route('/login/:mail').get((req, res) => {
+router.route('/login/:mail').get((req, res) => {     // for login  to het if user is in the exists in the database or not 
     user.findOne({email: req.params.mail},(error, data) => {
         if (error) {
             return next(error)
@@ -35,56 +37,5 @@ router.route('/login/:mail').get((req, res) => {
     })
 })
 
-
-router.route('/edit/:id').get((req, res) => {
-    user.findById(req.params.id, (error, data) => {
-        if (error) {
-            return next(error)
-        } else {
-            res.json(data)
-        }
-    })
-})
-
-
-router.route('/update/:id').put((req, res, next) => {
-    user.findByIdAndUpdate(req.params.id, {
-        $set: req.body
-    }, (error, data) => {
-        if (error) {
-            return next(error);
-            console.log(error)
-        } else {
-            res.json(data)
-            console.log('User updated successfully !')
-        }
-    })
-})
-
-// router.route('/update/:name').put((req, res, next) => {
-//     user.findOneAndUpdate({email:req.params.name}, {
-//      password: 'ha' }
-//     , (error, data) => {
-//         if (error) {
-//             return next(error);
-//             console.log(error)
-//         } else {
-//             res.json(data)
-//             console.log('User updated successfully !')
-//         }
-//     })
-// })
-
-router.route('/delete/:id').delete((req, res, next) => {
-    user.findByIdAndRemove(req.params.id, (error, data) => {
-        if (error) {
-            return next(error);
-        } else {
-            res.status(200).json({
-                msg: data
-            })
-        }
-    })
-})
 
 module.exports = router;

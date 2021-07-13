@@ -1,22 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-
-
-
-
 import App from './App'
-// import RoomContextProvider from './routes/room';
-// import './styles.css'
 
-
+// index file of the app just runs the App.js when opens
 
 ReactDOM.render(
-    // <ContextProvider>
-    //     <App />
-    // </ContextProvider>,
     <React.StrictMode>
-        {/* <RoomContextProvider> */}
         <App />
-        {/* </RoomContextProvider>, */}
   </React.StrictMode>,
  document.getElementById('root'))

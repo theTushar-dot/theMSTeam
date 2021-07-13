@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+// structure for mongoDB database
+
 let userSchema = new Schema({
     name: {
         type: String

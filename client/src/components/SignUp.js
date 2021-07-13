@@ -2,7 +2,9 @@ import React, {useState} from 'react'
 import { Link} from "react-router-dom";
 import axios from 'axios'
 import himg from './image/msteams.png'
-// import 'bootstrap/dist/css/bootstrap.min.css';
+
+
+// Sign UP page
 
 
 const SignUp = () =>{
@@ -26,15 +28,12 @@ const SignUp = () =>{
 
     const siging_up = (e) => {
         e.preventDefault()
-        // console.log('name:', name)
-        // console.log('Email:',email)
-
         const userObject = {
             name: name,
             email: email,
             password: pass
         }
-        axios.post('http://localhost:5000/users/create', userObject)
+        axios.post('http://localhost:5000/users/create', userObject)  // adding the new user
         .then((res) => {
             console.log(res.data)
         }).catch((error) => {
@@ -74,7 +73,7 @@ const SignUp = () =>{
                         <input type="email" value={email} onChange={onChangeUserEmail} placeholder="Sign-in address" required id="input-email"/>
                     </div>
                     <div class="signin-input">
-                        <input type="text" value={pass} onChange={onChangeUserPass}  placeholder="  Password" required id="input-password"/>
+                        <input type="text" value={pass} onChange={onChangeUserPass}  placeholder="Password" required id="input-password"/>
                     </div>
                     <div class="btn">
                         <button onClick={siging_up}>Sign up</button>

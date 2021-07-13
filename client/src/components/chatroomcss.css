@@ -99,6 +99,9 @@
   .menu-icons ul {
     text-align: center;
   }
+  .add_person{
+    
+  }
   
   .menu-icons ul li {
     padding-top: 7px;
@@ -207,7 +210,7 @@
     background-color: #746290;
     height: 50px;
     display: flex;
-    justify-content: flex-end;
+   
   }
   
   .profile-section {

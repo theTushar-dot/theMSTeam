@@ -6,8 +6,51 @@
     display: flex;
   } */
   
-.column {
+.column_left1 {
     flex: 50%;
+}
+
+.column_right1 {
+    flex: 50%;
+}
+
+.inside_left{
+    display: flex;
+    justify-content: center;
+    
+
+}
+
+.inside_right{
+    display: flex;
+    justify-content: center;
+    padding-top: 20px;
+
+}
+.or_s{
+    padding-right: 8px;
+
+}
+
+.create_in{
+    padding-top: 5px;
+
+}
+
+.name_img{
+    padding-top: 20px;
+    padding-left: 5px;
+    padding-bottom: 20px;
+    display: flex;
+    justify-content: center;
+
+}
+
+.hey_name{
+    padding-top: 5px;
+    padding-left: 5px;
+    
+
 }
 
 /* .button{

@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from "react";
-// import ReactSession from 'react-client-session';
 import "./todo.css";
-import {mail_id} from './LogIn'
-import axios from 'axios'
 
-// const user = require('../../../auth/model_db/db_schema');
+// ToDo list feature 
 
 const Todo = () => {
   const [task, setTask] = useState("");
   const [tasklist, setTaskList] = useState([]);
   const tasklistDB = []
 
+  // smart logic(jugaad**) for storing the tasks of the users
   useEffect(() => {
     
     const task_str = window.sessionStorage.getItem("tasks")
@@ -38,26 +36,6 @@ const Todo = () => {
 
       setTaskList([...tasklist, taskDetails]);
       setTask("")
-      // user.findOneAndUpdate({'name': window.name}, {password: 'ha'}, (error, data) =>{
-      //   if(error){
-      //     console.log(error)
-
-      //   }else{
-      //     console.log(data)
-      //   }
-      // } )
-      // const thing_toUp = {
-      //   name:"Tushar Prakash",
-      //   email:"tusharprakash582@gmail.com",
-      //   password: "ha"
-
-      // }
-      // axios.put('http://localhost:5000/update/60e8686c31d819328c8fe83a', thing_toUp)
-      //   .then((res) => {
-      //       console.log(res.data)
-      //   }).catch((error) => {
-      //       console.log(error)
-      //   });
 
     }
   };
@@ -91,12 +69,7 @@ const Todo = () => {
   })
 
   console.log('tasklist is', tasklist)
-
-  // const task_string = JSON.stringify(tasklist[0])
   const final_dbtask = tasklistDB.toString()
-
-  console.log('it str', final_dbtask)
-  console.log('just checking', JSON.parse("[" + final_dbtask + "]"))
 
   useEffect(() => {
     window.sessionStorage.setItem("tasks", final_dbtask);
@@ -109,7 +82,6 @@ const Todo = () => {
 
   return (
     <div className="todo">
-      {/* <div>{window.name}</div> */}
       <input
         type="text"
         name="text"
