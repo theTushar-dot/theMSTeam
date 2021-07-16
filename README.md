@@ -3,6 +3,16 @@
 > It's a video conferencing application developed in react js(front end) and node js(backend). 
 > This project was developed under the ***Microsoft Engage'21 Mentorship programme***.
 
+## Some pre-Signed Up accounts
+> - Email: tusharprakash582@gmail.com
+> - Password: Tushar@123
+> - Email: manishkumar42@gmail.com
+> - Password: manish12
+> - khansahil999@gmail.com
+> - Password: sahil12
+
+Obviously you can also create your own account
+
 ## Features of the Application
 - Sign-Up/Sign-In(MongoDB)
 - ToDo 
